@@ -5,7 +5,6 @@ internal-docs/
 .terraform/
 *.tfstate
 *.tfstate.backup
-!iac/bootstrap/terraform.tfstate
 
 # Lambda build artifacts
 iac/lambdas/node_modules/
