@@ -11,3 +11,7 @@ internal-docs/
 iac/lambdas/node_modules/
 iac/lambdas/dist/
 iac/modules/lambda/.zip_cache/
+
+# Scripts
+scripts/node_modules/
+scripts/seed-data.json

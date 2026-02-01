@@ -1,0 +1,103 @@
+{
+  "slides": [
+    {
+      "slide_id": "example-project-1",
+      "title": "Example Project — Cloud Platform",
+      "subtitle": "A sample cloud platform project for demonstration purposes.",
+      "section": "FEATURED WORK",
+      "challenge": "The team needed a modern cloud platform to replace legacy on-premise tooling. Existing systems were slow, siloed, and difficult to maintain.",
+      "built": "Designed and built a full-stack cloud application with real-time data visualization, role-based access control, and automated CI/CD pipelines.",
+      "impact": [
+        "**5x faster** workflow compared to legacy system",
+        "**Zero downtime** across first year of production usage",
+        "Adopted by teams across multiple regions"
+      ],
+      "tech_stack": ["TypeScript", "React", "Python", "PostgreSQL", "AWS", "Terraform", "Docker"],
+      "image": "placeholder-example-1.png"
+    },
+    {
+      "slide_id": "example-project-2",
+      "title": "Example Project — Data Dashboard",
+      "subtitle": "An interactive dashboard for operational analytics.",
+      "section": "FEATURED WORK",
+      "challenge": "Operations data was scattered across spreadsheets and manual reports with no way to identify trends or act on insights in real time.",
+      "built": "",
+      "built_items": [
+        "**Interactive charts** — time-series visualizations with pan, zoom, and filtering",
+        "**Multi-source data ingestion** — unified view across disparate data exports",
+        "**Automated reporting** — scheduled PDF generation and email distribution"
+      ],
+      "impact": [
+        "**Reduced reporting time** from days to minutes",
+        "**Data-driven decisions** — stakeholders gained real-time operational visibility"
+      ],
+      "tech_stack": ["React", "TypeScript", "Vite", "Python", "pandas"],
+      "image": "placeholder-example-2.png"
+    },
+    {
+      "slide_id": "example-project-3",
+      "title": "Example Project — Mobile Field App",
+      "subtitle": "A tablet application that digitized manual field data collection.",
+      "section": "EARLIER WORK",
+      "challenge": "Field operators recorded data on paper forms, making trend analysis impossible and introducing transcription errors.",
+      "built": "Built a tablet-based field application that replaced paper forms with a digital workflow, enabling real-time data capture and automated analysis.",
+      "impact": [
+        "**Eliminated paper workflows** — fully digital data capture",
+        "**Enabled trend analysis** — structured data made patterns visible for the first time"
+      ],
+      "tech_stack": ["Python", "Mobile development"],
+      "image": "placeholder-example-3.png"
+    }
+  ],
+  "roleVersions": [
+    {
+      "role_version": "software_engineer",
+      "intro": {
+        "name": "Your Name",
+        "tagline": "Software Engineer | Your Specialization",
+        "contact": {
+          "email": "you@example.com",
+          "phone": "555-555-5555",
+          "location": "City, State"
+        },
+        "summary": "A brief summary of your career path and what drives you.",
+        "bio": "A longer bio paragraph describing your background and expertise.",
+        "path": [
+          { "year": "2015", "event": "CS degree, University" },
+          { "year": "2015-2020", "event": "Software engineering roles" },
+          { "year": "2020", "event": "Built first major platform" },
+          { "year": "2023", "event": "Promoted to senior engineer" }
+        ]
+      },
+      "slide_order": [
+        "example-project-1",
+        "example-project-2",
+        "example-project-3"
+      ],
+      "closing": {
+        "headline": "Your key strengths in a single line",
+        "bullets": [
+          "**Builder**: Description of what you've built",
+          "**Full-stack**: Your core technologies",
+          "**Leader**: Your leadership qualities"
+        ],
+        "contact": {
+          "name": "Your Name",
+          "email": "you@example.com",
+          "phone": "555-555-5555",
+          "location": "City, State"
+        }
+      }
+    }
+  ],
+  "trackingLinks": [
+    {
+      "slug": "example-company-abc123",
+      "company": "Example Company",
+      "role_version": "software_engineer",
+      "status": "active",
+      "created_at": "2025-01-01T00:00:00Z",
+      "visits": {}
+    }
+  ]
+}

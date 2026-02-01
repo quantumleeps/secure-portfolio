@@ -53,6 +53,7 @@ data "aws_iam_policy_document" "validate_link_policy" {
     effect = "Allow"
     actions = [
       "dynamodb:GetItem",
+      "dynamodb:BatchGetItem",
       "dynamodb:Query",
     ]
     resources = [
