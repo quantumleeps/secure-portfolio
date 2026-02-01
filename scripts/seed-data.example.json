@@ -13,7 +13,7 @@
         "Adopted by teams across multiple regions"
       ],
       "tech_stack": ["TypeScript", "React", "Python", "PostgreSQL", "AWS", "Terraform", "Docker"],
-      "image": "placeholder-example-1.png"
+      "images": [{ "src": "placeholder-example-1.png", "title": "Cloud Platform", "caption": "Application dashboard with real-time data visualization" }]
     },
     {
       "slide_id": "example-project-2",
@@ -32,7 +32,7 @@
         "**Data-driven decisions** — stakeholders gained real-time operational visibility"
       ],
       "tech_stack": ["React", "TypeScript", "Vite", "Python", "pandas"],
-      "image": "placeholder-example-2.png"
+      "images": [{ "src": "placeholder-example-2.png", "title": "Data Dashboard", "caption": "Interactive time-series charts with metric selection" }]
     },
     {
       "slide_id": "example-project-3",
@@ -46,7 +46,7 @@
         "**Enabled trend analysis** — structured data made patterns visible for the first time"
       ],
       "tech_stack": ["Python", "Mobile development"],
-      "image": "placeholder-example-3.png"
+      "images": [{ "src": "placeholder-example-3.png", "title": "Field Data App", "caption": "Tablet interface showing digital data entry form" }]
     }
   ],
   "roleVersions": [
