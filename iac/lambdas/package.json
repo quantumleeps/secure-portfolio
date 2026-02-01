@@ -1,0 +1,16 @@
+{
+  "name": "secure-portfolio-lambdas",
+  "private": true,
+  "scripts": {
+    "build": "bash build.sh"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.131",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.500.0",
+    "@aws-sdk/lib-dynamodb": "^3.500.0"
+  }
+}

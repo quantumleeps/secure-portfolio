@@ -1,2 +1,13 @@
 .claude
 internal-docs/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+!iac/bootstrap/terraform.tfstate
+
+# Lambda build artifacts
+iac/lambdas/node_modules/
+iac/lambdas/dist/
+iac/modules/lambda/.zip_cache/
