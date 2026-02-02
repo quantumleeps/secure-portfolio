@@ -4,7 +4,7 @@ Next.js app that renders a role-specific, slide-based portfolio from the backend
 
 ## Stack
 
-- Next.js 16 (App Router, server components)
+- Next.js 15 (App Router, server components)
 - Tailwind CSS v4
 - shadcn/ui (dark theme, zinc base)
 - TypeScript
