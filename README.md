@@ -13,23 +13,17 @@ A hosted portfolio website with private, tracked access. Each job application in
 
 ## Architecture
 
-```
-                         +---------------------------+
-                         |        DynamoDB           |
-                         |  (slides + visit data)    |
-                         +-------------+-------------+
-                                       |
-                                       v
-+----------+      +----------------+   +-------------+
-|          | ---> |  Amplify /     |-->| API Gateway  |
-|  Browser |      |  Next.js (SSR) |   +------+------+
-|          | <--- |                |          |
-+----+-----+      +----------------+          v
-     |                                  +-----------+
-     |  heartbeat pings (POST)          |  Lambda   |
-     +--------------------------------->| Functions |
-           (via API Gateway)            +-----------+
-```
+The system has two runtime flows, both routed through the same API Gateway.
+
+**Page load (server-side rendering)** — When a recruiter clicks a tracking link, the request hits AWS Amplify, which serves the Next.js app via CloudFront and Lambda@Edge. During SSR, the Next.js server component makes a `GET /api/portfolio?r={slug}` call to API Gateway, which invokes the `validate-link` Lambda. That function checks the slug against the tracking-links DynamoDB table, looks up the role version's slide order, batch-fetches the corresponding slides, records the visit, and returns the ordered slide data. Next.js renders the portfolio HTML and sends it to the browser. Nothing about the validation logic, tracking, or API is exposed to the client.
+
+**Heartbeat (client-side)** — Once the page loads in the browser, a lightweight heartbeat fires a `POST /api/heartbeat` to API Gateway every 30 seconds while the tab is active. The `record-heartbeat` Lambda increments the heartbeat counter on the visit record in DynamoDB. This is the only client-to-backend call that occurs after the initial page load.
+
+**Data layer** — Three DynamoDB tables store all application state: `portfolio-slides` holds slide content (title, narrative sections, tech tags, images), `role-versions` maps each role type to an ordered list of slide IDs, and `tracking-links` stores slugs with their visit history and engagement data.
+
+**Hosting** — AWS Amplify manages the CloudFront distribution, Lambda@Edge for SSR, and S3 for static assets. The Amplify app is connected to GitHub and builds are triggered on push to `main` or manually via the operator CLI.
+
+**IAM** — Two scoped IAM users separate infrastructure from operations. The `deployer` user runs Terraform and manages AWS resources. The `operator` user has DynamoDB data-plane access for CLI scripts and can trigger Amplify builds.
 
 ## Tech Stack
 
@@ -48,7 +42,6 @@ secure-portfolio/
 │   ├── bootstrap/    # One-time setup (S3 state bucket, DynamoDB lock table)
 │   ├── environments/ # Per-environment configs (dev, prod)
 │   └── modules/      # Reusable Terraform modules (DynamoDB, Lambda, API GW)
-├── internal-docs/    # Internal planning docs (gitignored)
 ├── scripts/          # CLI tools for link management and metrics
 ├── .gitignore
 └── README.md
@@ -66,7 +59,8 @@ secure-portfolio/
 
 ## Scripts
 
-Two planned CLI tools in `scripts/`:
+CLI tools in `scripts/` for managing links and reviewing engagement. See [`scripts/README.md`](scripts/README.md) for full usage.
 
-- **manage-links** — Create, list, and revoke tracking links for company/role combinations. Writes records to DynamoDB and prints the full URL on creation.
-- **view-metrics** — Query DynamoDB for visit and engagement data. Supports filtering by link slug, company, or date range.
+- **manage-links** — Create, list, and revoke tracking links. Writes to DynamoDB directly using the operator AWS profile.
+- **view-metrics** — Query visit and engagement data from DynamoDB. Supports filtering by slug or company.
+- **seed** — Populate DynamoDB tables with slide content, role versions, and initial tracking links.

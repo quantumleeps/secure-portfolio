@@ -87,20 +87,6 @@ data "aws_iam_policy_document" "record_heartbeat_policy" {
   }
 }
 
-data "aws_iam_policy_document" "query_metrics_policy" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "dynamodb:GetItem",
-      "dynamodb:Query",
-      "dynamodb:Scan",
-    ]
-    resources = [
-      module.dynamodb_tracking_links.table_arn,
-    ]
-  }
-}
-
 # --- Lambda Functions ---
 
 module "lambda_validate_link" {
@@ -121,17 +107,6 @@ module "lambda_record_heartbeat" {
   function_name   = "${local.prefix}-record-heartbeat"
   source_dir      = "${local.lambda_src_base}/record-heartbeat"
   iam_policy_json = data.aws_iam_policy_document.record_heartbeat_policy.json
-  environment_vars = {
-    TRACKING_TABLE = module.dynamodb_tracking_links.table_name
-  }
-  tags = local.common_tags
-}
-
-module "lambda_query_metrics" {
-  source          = "../../modules/lambda"
-  function_name   = "${local.prefix}-query-metrics"
-  source_dir      = "${local.lambda_src_base}/query-metrics"
-  iam_policy_json = data.aws_iam_policy_document.query_metrics_policy.json
   environment_vars = {
     TRACKING_TABLE = module.dynamodb_tracking_links.table_name
   }
@@ -160,11 +135,6 @@ module "api_gateway" {
       route_key    = "POST /api/heartbeat"
       function_arn = module.lambda_record_heartbeat.function_arn
       invoke_arn   = module.lambda_record_heartbeat.invoke_arn
-    },
-    {
-      route_key    = "GET /api/metrics"
-      function_arn = module.lambda_query_metrics.function_arn
-      invoke_arn   = module.lambda_query_metrics.invoke_arn
     },
   ]
 }

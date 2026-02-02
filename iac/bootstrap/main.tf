@@ -271,3 +271,56 @@ data "aws_iam_policy_document" "deployer" {
     ]
   }
 }
+
+# --- Operator IAM User ---
+# Used for application operations: CLI scripts (manage-links, view-metrics, seed),
+# triggering Amplify builds. Separate from deployer (infrastructure-only).
+
+resource "aws_iam_user" "operator" {
+  name = "secure-portfolio-operator"
+  path = "/operators/"
+}
+
+resource "aws_iam_access_key" "operator" {
+  user = aws_iam_user.operator.name
+}
+
+resource "aws_iam_policy" "operator" {
+  name   = "secure-portfolio-operator-policy"
+  policy = data.aws_iam_policy_document.operator.json
+}
+
+resource "aws_iam_user_policy_attachment" "operator" {
+  user       = aws_iam_user.operator.name
+  policy_arn = aws_iam_policy.operator.arn
+}
+
+data "aws_iam_policy_document" "operator" {
+  # DynamoDB — data access for CLI scripts
+  statement {
+    sid    = "DynamoDBData"
+    effect = "Allow"
+    actions = [
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:BatchWriteItem",
+      "dynamodb:Scan",
+    ]
+    resources = [
+      "arn:aws:dynamodb:us-east-1:${data.aws_caller_identity.current.account_id}:table/secure-portfolio-*",
+    ]
+  }
+
+  # Amplify — trigger builds
+  statement {
+    sid    = "AmplifyDeploy"
+    effect = "Allow"
+    actions = [
+      "amplify:StartJob",
+      "amplify:GetJob",
+      "amplify:ListJobs",
+    ]
+    resources = ["*"]
+  }
+}

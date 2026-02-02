@@ -18,3 +18,14 @@ output "deployer_secret_access_key" {
   value       = aws_iam_access_key.deployer.secret
   sensitive   = true
 }
+
+output "operator_access_key_id" {
+  description = "Access key ID for the operator IAM user"
+  value       = aws_iam_access_key.operator.id
+}
+
+output "operator_secret_access_key" {
+  description = "Secret access key for the operator IAM user"
+  value       = aws_iam_access_key.operator.secret
+  sensitive   = true
+}

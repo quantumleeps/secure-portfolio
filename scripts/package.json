@@ -2,6 +2,10 @@
   "name": "secure-portfolio-scripts",
   "private": true,
   "type": "module",
+  "scripts": {
+    "manage-links": "AWS_PROFILE=secure-portfolio-operator AWS_REGION=us-east-1 tsx manage-links.ts",
+    "view-metrics": "AWS_PROFILE=secure-portfolio-operator AWS_REGION=us-east-1 tsx view-metrics.ts"
+  },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.500.0",
     "@aws-sdk/lib-dynamodb": "^3.500.0"
