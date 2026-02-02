@@ -185,6 +185,7 @@ data "aws_iam_policy_document" "deployer" {
       "iam:TagRole",
       "iam:UntagRole",
       "iam:UpdateRole",
+      "iam:UpdateAssumeRolePolicy",
       "iam:AttachRolePolicy",
       "iam:DetachRolePolicy",
       "iam:PutRolePolicy",
@@ -196,6 +197,46 @@ data "aws_iam_policy_document" "deployer" {
     ]
     resources = [
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/secure-portfolio-*",
+    ]
+  }
+
+  # Amplify
+  statement {
+    sid    = "Amplify"
+    effect = "Allow"
+    actions = [
+      "amplify:CreateApp",
+      "amplify:DeleteApp",
+      "amplify:GetApp",
+      "amplify:UpdateApp",
+      "amplify:CreateBranch",
+      "amplify:DeleteBranch",
+      "amplify:GetBranch",
+      "amplify:UpdateBranch",
+      "amplify:StartJob",
+      "amplify:StopJob",
+      "amplify:GetJob",
+      "amplify:ListApps",
+      "amplify:ListBranches",
+      "amplify:ListJobs",
+      "amplify:CreateDeployment",
+      "amplify:TagResource",
+      "amplify:UntagResource",
+      "amplify:ListTagsForResource",
+    ]
+    resources = ["*"]
+  }
+
+  # SSM — read GitHub token for Amplify
+  statement {
+    sid    = "SSMReadSecrets"
+    effect = "Allow"
+    actions = [
+      "ssm:GetParameter",
+      "ssm:GetParameters",
+    ]
+    resources = [
+      "arn:aws:ssm:us-east-1:${data.aws_caller_identity.current.account_id}:parameter/secure-portfolio/*",
     ]
   }
 
@@ -225,6 +266,8 @@ data "aws_iam_policy_document" "deployer" {
     resources = [
       "arn:aws:logs:us-east-1:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/secure-portfolio-*",
       "arn:aws:logs:us-east-1:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/secure-portfolio-*:*",
+      "arn:aws:logs:us-east-1:${data.aws_caller_identity.current.account_id}:log-group:/aws/amplify/secure-portfolio-*",
+      "arn:aws:logs:us-east-1:${data.aws_caller_identity.current.account_id}:log-group:/aws/amplify/secure-portfolio-*:*",
     ]
   }
 }

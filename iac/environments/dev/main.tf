@@ -168,3 +168,28 @@ module "api_gateway" {
     },
   ]
 }
+
+# --- SSM: GitHub PAT ---
+
+data "aws_ssm_parameter" "github_token" {
+  name            = "/secure-portfolio/github-token"
+  with_decryption = true
+}
+
+# --- Amplify ---
+
+module "amplify" {
+  source              = "../../modules/amplify"
+  app_name            = "${local.prefix}-frontend"
+  repository          = "https://github.com/quantumleeps/secure-portfolio"
+  github_access_token = data.aws_ssm_parameter.github_token.value
+  branch_name         = "main"
+  stage               = "PRODUCTION"
+  tags                = local.common_tags
+
+  environment_variables = {
+    AMPLIFY_MONOREPO_APP_ROOT = "app"
+    API_ENDPOINT              = module.api_gateway.invoke_url
+    NEXT_PUBLIC_API_ENDPOINT  = module.api_gateway.invoke_url
+  }
+}

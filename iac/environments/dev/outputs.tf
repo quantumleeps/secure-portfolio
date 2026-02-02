@@ -32,3 +32,13 @@ output "query_metrics_function" {
   description = "query-metrics Lambda function name"
   value       = module.lambda_query_metrics.function_name
 }
+
+output "amplify_app_id" {
+  description = "Amplify app ID (used by GitHub Actions)"
+  value       = module.amplify.app_id
+}
+
+output "amplify_default_domain" {
+  description = "Amplify default domain"
+  value       = module.amplify.default_domain
+}
