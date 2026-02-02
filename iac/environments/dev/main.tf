@@ -189,7 +189,6 @@ module "amplify" {
 
   environment_variables = {
     AMPLIFY_MONOREPO_APP_ROOT = "app"
-    API_ENDPOINT              = module.api_gateway.invoke_url
     NEXT_PUBLIC_API_ENDPOINT  = module.api_gateway.invoke_url
   }
 }

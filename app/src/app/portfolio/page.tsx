@@ -7,9 +7,9 @@ interface PageProps {
 }
 
 async function fetchPortfolio(slug: string): Promise<PortfolioData | null> {
-  const endpoint = process.env.API_ENDPOINT;
+  const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
   if (!endpoint) {
-    console.error("API_ENDPOINT is not configured");
+    console.error("NEXT_PUBLIC_API_ENDPOINT is not configured");
     return null;
   }
 
