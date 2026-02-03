@@ -50,11 +50,30 @@ export function ProjectSlide({ slide }: ProjectSlideProps) {
       {slide.images.length > 0 && (
         <div className="space-y-4">
           {slide.images.map((img, i) => (
-            <figure key={i} className="space-y-2">
-              <div className="overflow-hidden rounded-lg border border-border/40 bg-muted/20">
-                <div className="flex aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
-                  {img.title}
-                </div>
+            <figure key={`${slide.slide_id}-${i}`} className="space-y-2">
+              <div className="overflow-hidden rounded-lg border border-border/90 bg-muted/10">
+                {img.src ? (
+                  <>
+                    <img
+                      src={img.src}
+                      alt={img.title}
+                      className="pointer-events-none select-none aspect-video w-full object-cover"
+                      draggable={false}
+                      onContextMenu={(e) => e.preventDefault()}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLElement).style.display = "none";
+                        (e.currentTarget.nextElementSibling as HTMLElement)?.classList.remove("hidden");
+                      }}
+                    />
+                    <div className="hidden aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
+                      {img.title}
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
+                    {img.title}
+                  </div>
+                )}
               </div>
               {img.caption && (
                 <figcaption className="text-center text-xs text-muted-foreground">

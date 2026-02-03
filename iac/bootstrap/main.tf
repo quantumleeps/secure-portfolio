@@ -240,6 +240,42 @@ data "aws_iam_policy_document" "deployer" {
     ]
   }
 
+  # S3 — portfolio image buckets
+  statement {
+    sid    = "S3ImageBuckets"
+    effect = "Allow"
+    actions = [
+      "s3:CreateBucket",
+      "s3:DeleteBucket",
+      "s3:GetBucketPolicy",
+      "s3:GetBucketAcl",
+      "s3:GetBucketCORS",
+      "s3:GetBucketVersioning",
+      "s3:GetBucketLogging",
+      "s3:GetBucketObjectLockConfiguration",
+      "s3:GetBucketTagging",
+      "s3:GetBucketPublicAccessBlock",
+      "s3:GetAccelerateConfiguration",
+      "s3:GetBucketRequestPayment",
+      "s3:GetBucketWebsite",
+      "s3:GetReplicationConfiguration",
+      "s3:GetLifecycleConfiguration",
+      "s3:GetEncryptionConfiguration",
+      "s3:GetBucketOwnershipControls",
+      "s3:PutBucketPolicy",
+      "s3:PutBucketAcl",
+      "s3:PutBucketTagging",
+      "s3:PutBucketPublicAccessBlock",
+      "s3:PutEncryptionConfiguration",
+      "s3:PutBucketVersioning",
+      "s3:PutBucketOwnershipControls",
+      "s3:ListBucket",
+    ]
+    resources = [
+      "arn:aws:s3:::secure-portfolio-*-portfolio-images",
+    ]
+  }
+
   # CloudWatch Logs — describe requires wildcard resource
   statement {
     sid       = "CloudWatchLogsDescribe"
@@ -309,6 +345,22 @@ data "aws_iam_policy_document" "operator" {
     ]
     resources = [
       "arn:aws:dynamodb:us-east-1:${data.aws_caller_identity.current.account_id}:table/secure-portfolio-*",
+    ]
+  }
+
+  # S3 — upload portfolio images
+  statement {
+    sid    = "S3ImageUpload"
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject",
+      "s3:ListBucket",
+    ]
+    resources = [
+      "arn:aws:s3:::secure-portfolio-*-portfolio-images",
+      "arn:aws:s3:::secure-portfolio-*-portfolio-images/*",
     ]
   }
 

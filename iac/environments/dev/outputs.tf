@@ -28,6 +28,11 @@ output "record_heartbeat_function" {
   value       = module.lambda_record_heartbeat.function_name
 }
 
+output "images_bucket_name" {
+  description = "S3 bucket for portfolio images"
+  value       = module.s3_portfolio_images.bucket_name
+}
+
 output "amplify_app_id" {
   description = "Amplify app ID (used by GitHub Actions)"
   value       = module.amplify.app_id

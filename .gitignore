@@ -14,3 +14,6 @@ iac/modules/lambda/.zip_cache/
 # Scripts
 scripts/node_modules/
 scripts/seed-data.json
+
+# Temporary images
+.images

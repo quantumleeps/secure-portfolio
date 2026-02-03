@@ -8,6 +8,7 @@ import { ProjectSlide } from "./project-slide";
 import { ClosingSlide } from "./closing-slide";
 import { WelcomeToast } from "./welcome-toast";
 import { useHeartbeat } from "@/hooks/use-heartbeat";
+import { usePrefetchImages } from "@/hooks/use-prefetch-images";
 
 interface PortfolioViewerProps {
   data: PortfolioData;
@@ -19,6 +20,7 @@ export function PortfolioViewer({ data }: PortfolioViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useHeartbeat(slug, visit_id);
+  usePrefetchImages(slides);
 
   const goTo = useCallback(
     (index: number) => {

@@ -14,9 +14,8 @@ for fn_dir in "$SRC_DIR"/*/; do
     --bundle \
     --platform=node \
     --target=node20 \
-    --format=esm \
-    --outfile="$DIST_DIR/$fn_name/index.mjs" \
-    --external:@aws-sdk/*
+    --format=cjs \
+    --outfile="$DIST_DIR/$fn_name/index.cjs"
 done
 
 echo "Build complete."

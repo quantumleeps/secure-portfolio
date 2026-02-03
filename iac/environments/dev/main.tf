@@ -46,6 +46,14 @@ module "dynamodb_tracking_links" {
   tags       = local.common_tags
 }
 
+# --- S3 Image Bucket ---
+
+module "s3_portfolio_images" {
+  source      = "../../modules/s3-private"
+  bucket_name = "${local.prefix}-portfolio-images"
+  tags        = local.common_tags
+}
+
 # --- IAM Policy Documents ---
 
 data "aws_iam_policy_document" "validate_link_policy" {
@@ -70,6 +78,14 @@ data "aws_iam_policy_document" "validate_link_policy" {
     ]
     resources = [
       module.dynamodb_tracking_links.table_arn,
+    ]
+  }
+
+  statement {
+    effect  = "Allow"
+    actions = ["s3:GetObject"]
+    resources = [
+      "${module.s3_portfolio_images.bucket_arn}/*",
     ]
   }
 }
@@ -98,6 +114,7 @@ module "lambda_validate_link" {
     SLIDES_TABLE   = module.dynamodb_portfolio_slides.table_name
     ROLES_TABLE    = module.dynamodb_role_versions.table_name
     TRACKING_TABLE = module.dynamodb_tracking_links.table_name
+    IMAGES_BUCKET  = module.s3_portfolio_images.bucket_name
   }
   tags = local.common_tags
 }

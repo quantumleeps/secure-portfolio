@@ -5,13 +5,18 @@ import {
   BatchGetCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
 
 const client = DynamoDBDocumentClient.from(new DynamoDBClient({}));
+const s3 = new S3Client({});
 
 const SLIDES_TABLE = process.env.SLIDES_TABLE!;
 const ROLES_TABLE = process.env.ROLES_TABLE!;
 const TRACKING_TABLE = process.env.TRACKING_TABLE!;
+const IMAGES_BUCKET = process.env.IMAGES_BUCKET!;
+const SIGNED_URL_EXPIRY = 600; // 10 minutes
 
 const json = (statusCode: number, body: unknown): APIGatewayProxyResultV2 => ({
   statusCode,
@@ -81,11 +86,32 @@ export async function handler(
     })
   );
 
+  const signedSlides = await Promise.all(
+    slides.map(async (slide) => {
+      if (!slide) return slide;
+      const images = (slide.images as { src: string; title: string; caption: string }[]) ?? [];
+      if (images.length === 0) return slide;
+      const signedImages = await Promise.all(
+        images.map(async (img) => ({
+          ...img,
+          src: img.src
+            ? await getSignedUrl(
+                s3,
+                new GetObjectCommand({ Bucket: IMAGES_BUCKET, Key: img.src }),
+                { expiresIn: SIGNED_URL_EXPIRY }
+              )
+            : img.src,
+        }))
+      );
+      return { ...slide, images: signedImages };
+    })
+  );
+
   return json(200, {
     slug,
     visit_id: visitId,
     intro: role.intro,
-    slides,
+    slides: signedSlides,
     closing: role.closing,
   });
 }
