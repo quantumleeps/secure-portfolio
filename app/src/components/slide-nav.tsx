@@ -34,17 +34,20 @@ export function SlideNav({
 }: SlideNavProps) {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex h-14 select-none items-center justify-between gap-2 border-b border-border/40 bg-background/80 px-3 backdrop-blur-md md:px-4">
-      <div className="hidden shrink-0 text-sm font-medium text-muted-foreground md:block md:w-24">
+      <button
+        onClick={() => onSelect(0)}
+        className="hidden shrink-0 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground md:block"
+      >
         {items[0]?.label}
-      </div>
+      </button>
 
-      <div className="flex min-w-0 flex-1 items-center gap-2 md:flex-none md:justify-center">
+      <div className="flex min-w-0 flex-1 items-center gap-2 md:justify-center">
         <LayoutList className="h-4 w-4 shrink-0 text-muted-foreground" />
         <Select
           value={String(currentIndex)}
           onValueChange={(v) => onSelect(Number(v))}
         >
-          <SelectTrigger className="min-w-0 flex-1 border-border/40 bg-transparent text-sm md:w-[400px] md:flex-none">
+          <SelectTrigger className="min-w-0 flex-1 border-border/40 bg-transparent text-sm md:max-w-[600px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

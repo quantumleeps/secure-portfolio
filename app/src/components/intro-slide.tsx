@@ -7,7 +7,7 @@ interface IntroSlideProps {
 
 export function IntroSlide({ intro }: IntroSlideProps) {
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 xl:max-w-4xl xl:mx-auto">
       <header className="space-y-4">
         <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
           {intro.name}

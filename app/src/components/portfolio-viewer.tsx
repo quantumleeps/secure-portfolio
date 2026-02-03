@@ -45,9 +45,9 @@ export function PortfolioViewer({ data }: PortfolioViewerProps) {
   }, [goNext, goPrev]);
 
   const navItems = [
-    { label: intro.name, section: "" },
+    { label: intro.name, section: "INTRODUCTION" },
     ...slides.map((s) => ({ label: s.title, section: s.section })),
-    { label: closing.headline, section: "" },
+    { label: closing.headline, section: "CLOSING" },
   ];
 
   return (
@@ -62,7 +62,7 @@ export function PortfolioViewer({ data }: PortfolioViewerProps) {
         onNext={goNext}
       />
       <main className="pt-16">
-        <div className="mx-auto max-w-4xl px-6 py-12">
+        <div className="mx-auto max-w-4xl xl:max-w-7xl px-6 py-12">
           {currentIndex === 0 && <IntroSlide intro={intro} />}
           {currentIndex > 0 && currentIndex < totalSlides - 1 && (
             <ProjectSlide slide={slides[currentIndex - 1]} />

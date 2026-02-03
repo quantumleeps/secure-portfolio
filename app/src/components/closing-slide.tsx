@@ -20,7 +20,7 @@ function renderMarkdownBold(text: string) {
 
 export function ClosingSlide({ closing }: ClosingSlideProps) {
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 xl:max-w-4xl xl:mx-auto">
       <header>
         <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           {closing.headline}
