@@ -24,6 +24,12 @@ interface ImageGalleryProps {
 }
 
 function ImageLightbox({ image }: { image: SlideImage }) {
+  const [imgFailed, setImgFailed] = useState(false);
+
+  useEffect(() => {
+    setImgFailed(false);
+  }, [image.src]);
+
   return (
     <Dialog>
       <figure className="space-y-2">
@@ -32,25 +38,15 @@ function ImageLightbox({ image }: { image: SlideImage }) {
             type="button"
             className="w-full cursor-zoom-in overflow-hidden rounded-lg bg-muted/30"
           >
-            {image.src ? (
-              <>
-                <img
-                  src={image.src}
-                  alt={image.title}
-                  className="aspect-video w-full select-none object-cover"
-                  draggable={false}
-                  onContextMenu={(e) => e.preventDefault()}
-                  onError={(e) => {
-                    (e.currentTarget as HTMLElement).style.display = "none";
-                    (
-                      e.currentTarget.nextElementSibling as HTMLElement
-                    )?.classList.remove("hidden");
-                  }}
-                />
-                <div className="hidden aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
-                  {image.title}
-                </div>
-              </>
+            {image.src && !imgFailed ? (
+              <img
+                src={image.src}
+                alt={image.title}
+                className="aspect-video w-full select-none object-cover"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                onError={() => setImgFailed(true)}
+              />
             ) : (
               <div className="flex aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
                 {image.title}
