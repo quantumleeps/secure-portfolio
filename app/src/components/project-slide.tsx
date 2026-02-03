@@ -1,5 +1,6 @@
 import type { Slide } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
+import { ImageGallery } from "@/components/image-gallery";
 
 interface ProjectSlideProps {
   slide: Slide;
@@ -50,41 +51,7 @@ export function ProjectSlide({ slide }: ProjectSlideProps) {
           )}
 
           {slide.images.length > 0 && (
-            <div className="space-y-4">
-              {slide.images.map((img, i) => (
-                <figure key={`${slide.slide_id}-${i}`} className="space-y-2">
-                  <div className="overflow-hidden rounded-lg bg-muted/30">
-                    {img.src ? (
-                      <>
-                        <img
-                          src={img.src}
-                          alt={img.title}
-                          className="pointer-events-none select-none aspect-video w-full object-cover"
-                          draggable={false}
-                          onContextMenu={(e) => e.preventDefault()}
-                          onError={(e) => {
-                            (e.currentTarget as HTMLElement).style.display = "none";
-                            (e.currentTarget.nextElementSibling as HTMLElement)?.classList.remove("hidden");
-                          }}
-                        />
-                        <div className="hidden aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
-                          {img.title}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="flex aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
-                        {img.title}
-                      </div>
-                    )}
-                  </div>
-                  {img.caption && (
-                    <figcaption className="text-center text-xs text-muted-foreground">
-                      {img.caption}
-                    </figcaption>
-                  )}
-                </figure>
-              ))}
-            </div>
+            <ImageGallery images={slide.images} slideId={slide.slide_id} />
           )}
 
           {(slide.built || (slide.built_items && slide.built_items.length > 0)) && (
