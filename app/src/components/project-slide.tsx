@@ -1,6 +1,7 @@
 import type { Slide } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { ImageGallery } from "@/components/image-gallery";
+import { Calendar } from "lucide-react";
 
 interface ProjectSlideProps {
   slide: Slide;
@@ -23,13 +24,23 @@ export function ProjectSlide({ slide }: ProjectSlideProps) {
   return (
     <div className="space-y-10">
       <header className="space-y-3 xl:max-w-4xl">
-        {slide.section && (
-          <Badge
-            variant="secondary"
-            className="text-xs font-semibold uppercase tracking-widest"
-          >
-            {slide.section}
-          </Badge>
+        {(slide.section || slide.date) && (
+          <div className="flex items-center justify-between gap-4">
+            {slide.section && (
+              <Badge
+                variant="secondary"
+                className="text-xs font-semibold uppercase tracking-widest"
+              >
+                {slide.section}
+              </Badge>
+            )}
+            {slide.date && (
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Calendar className="h-3 w-3" />
+                {slide.date}
+              </span>
+            )}
+          </div>
         )}
         <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           {slide.title}

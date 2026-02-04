@@ -9,6 +9,7 @@ export interface Slide {
   title: string;
   subtitle: string;
   section: string;
+  date?: string;
   challenge: string;
   built: string;
   built_items?: string[];

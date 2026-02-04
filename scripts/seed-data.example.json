@@ -5,6 +5,7 @@
       "title": "Example Project — Cloud Platform",
       "subtitle": "A sample cloud platform project for demonstration purposes.",
       "section": "FEATURED WORK",
+      "date": "2023–2025",
       "challenge": "The team needed a modern cloud platform to replace legacy on-premise tooling. Existing systems were slow, siloed, and difficult to maintain.",
       "built": "Designed and built a full-stack cloud application with real-time data visualization, role-based access control, and automated CI/CD pipelines.",
       "impact": [
@@ -20,6 +21,7 @@
       "title": "Example Project — Data Dashboard",
       "subtitle": "An interactive dashboard for operational analytics.",
       "section": "FEATURED WORK",
+      "date": "2024",
       "challenge": "Operations data was scattered across spreadsheets and manual reports with no way to identify trends or act on insights in real time.",
       "built": "",
       "built_items": [
@@ -39,6 +41,7 @@
       "title": "Example Project — Mobile Field App",
       "subtitle": "A tablet application that digitized manual field data collection.",
       "section": "EARLIER WORK",
+      "date": "2020",
       "challenge": "Field operators recorded data on paper forms, making trend analysis impossible and introducing transcription errors.",
       "built": "Built a tablet-based field application that replaced paper forms with a digital workflow, enabling real-time data capture and automated analysis.",
       "impact": [
