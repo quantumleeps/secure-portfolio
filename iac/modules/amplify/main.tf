@@ -68,3 +68,22 @@ resource "aws_amplify_branch" "this" {
   environment_variables = var.branch_environment_variables
   tags                  = var.tags
 }
+
+# Custom domain association — only created when domain_name is provided
+resource "aws_amplify_domain_association" "this" {
+  count = var.domain_name != "" ? 1 : 0
+
+  app_id                = aws_amplify_app.this.id
+  domain_name           = var.domain_name
+  wait_for_verification = false
+
+  sub_domain {
+    prefix      = ""
+    branch_name = aws_amplify_branch.this.branch_name
+  }
+
+  sub_domain {
+    prefix      = "www"
+    branch_name = aws_amplify_branch.this.branch_name
+  }
+}

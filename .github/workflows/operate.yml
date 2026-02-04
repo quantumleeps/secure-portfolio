@@ -1,0 +1,45 @@
+name: Operate
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Script to run"
+        required: true
+        type: choice
+        options:
+          - manage-links
+          - view-metrics
+          - seed
+      args:
+        description: "Arguments to pass to the script"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_OPERATOR_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Install dependencies
+        working-directory: scripts
+        run: npm ci
+
+      - name: Run script
+        working-directory: scripts
+        run: npx tsx ${{ inputs.command }}.ts --env prod ${{ inputs.args }}

@@ -1,11 +1,11 @@
 # Scripts
 
-CLI tools for managing tracking links and viewing engagement metrics. All scripts query DynamoDB directly using the `secure-portfolio-operator` AWS profile.
+CLI tools for managing tracking links and viewing engagement metrics. All scripts target the **dev** environment by default. Prod operations run via GitHub Actions (see `.github/workflows/operate.yml`).
 
 ## Prerequisites
 
 - Node.js 18+
-- AWS credentials configured for the `secure-portfolio-operator` profile in `~/.aws/credentials`
+- AWS credentials configured for the `secure-portfolio-dev-operator` profile in `~/.aws/credentials`
 
 ## Setup
 
@@ -85,18 +85,35 @@ Populate DynamoDB tables with slide content, role versions, and initial tracking
 
 ```bash
 cp seed-data.example.json seed-data.json   # fill in your content
-npx tsx seed.ts
+npm run seed
 ```
 
-## Environment Variables
+Use `--env prod` to target production tables (only works via GitHub Actions operate workflow for prod).
 
-All scripts use sensible defaults for the dev environment. Override with environment variables if needed:
+## Environment Configuration
 
-| Variable | Default | Used by |
-|---|---|---|
-| `AWS_PROFILE` | `secure-portfolio-operator` (set in package.json scripts) | all |
-| `AWS_REGION` | `us-east-1` | all |
-| `TRACKING_TABLE` | `secure-portfolio-dev-tracking-links` | manage-links, view-metrics |
-| `ROLES_TABLE` | `secure-portfolio-dev-role-versions` | manage-links |
-| `SLIDES_TABLE` | `secure-portfolio-dev-portfolio-slides` | seed |
-| `BASE_URL` | `https://main.dkf5fstrk9fic.amplifyapp.com` | manage-links (URL output) |
+All scripts default to the dev environment. Use `--env prod` to target prod tables.
+
+### .env file
+
+Scripts load a `.env` file from the `scripts/` directory if it exists. Copy the example and set your dev Amplify URL:
+
+```bash
+cp .env.example .env
+# Edit .env with your dev Amplify app URL
+```
+
+The `.env` file is gitignored and won't be committed.
+
+### Environment variables
+
+Override defaults with environment variables or the `.env` file:
+
+| Variable | Default (dev) | Default (prod) | Used by |
+|---|---|---|---|
+| `AWS_PROFILE` | `secure-portfolio-dev-operator` | _(OIDC via CI/CD)_ | all |
+| `AWS_REGION` | `us-east-1` | `us-east-1` | all |
+| `TRACKING_TABLE` | `secure-portfolio-dev-tracking-links` | `secure-portfolio-prod-tracking-links` | manage-links, view-metrics |
+| `ROLES_TABLE` | `secure-portfolio-dev-role-versions` | `secure-portfolio-prod-role-versions` | manage-links |
+| `SLIDES_TABLE` | `secure-portfolio-dev-portfolio-slides` | `secure-portfolio-prod-portfolio-slides` | seed |
+| `BASE_URL` | _(set via .env)_ | `https://danleeper.com` | manage-links (URL output) |

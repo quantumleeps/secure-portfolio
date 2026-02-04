@@ -38,6 +38,18 @@ variable "branch_environment_variables" {
   default     = {}
 }
 
+variable "domain_name" {
+  description = "Custom domain name (leave empty to skip domain association)"
+  type        = string
+  default     = ""
+}
+
+variable "route53_zone_id" {
+  description = "Route 53 hosted zone ID for domain verification (required if domain_name is set)"
+  type        = string
+  default     = ""
+}
+
 variable "tags" {
   description = "Resource tags"
   type        = map(string)

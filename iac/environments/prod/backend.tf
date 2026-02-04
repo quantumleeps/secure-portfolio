@@ -1,10 +1,10 @@
 terraform {
   backend "s3" {
     bucket         = "secure-portfolio-terraform-state"
-    key            = "environments/dev/terraform.tfstate"
+    key            = "environments/prod/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
     use_lockfile   = true
-    profile        = "secure-portfolio-dev-deployer"
+    # No profile — credentials provided by OIDC in CI/CD or AWS_PROFILE env var locally
   }
 }

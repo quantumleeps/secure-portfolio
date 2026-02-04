@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "manage-links": "AWS_PROFILE=secure-portfolio-operator AWS_REGION=us-east-1 tsx manage-links.ts",
-    "seed": "AWS_PROFILE=secure-portfolio-operator AWS_REGION=us-east-1 tsx seed.ts",
-    "view-metrics": "AWS_PROFILE=secure-portfolio-operator AWS_REGION=us-east-1 tsx view-metrics.ts"
+    "manage-links": "AWS_PROFILE=secure-portfolio-dev-operator AWS_REGION=us-east-1 tsx manage-links.ts",
+    "seed": "AWS_PROFILE=secure-portfolio-dev-operator AWS_REGION=us-east-1 tsx seed.ts",
+    "view-metrics": "AWS_PROFILE=secure-portfolio-dev-operator AWS_REGION=us-east-1 tsx view-metrics.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.500.0",

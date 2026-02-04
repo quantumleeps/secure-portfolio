@@ -1,2 +1,9 @@
-# Bootstrap is intentionally hardcoded for the single AWS account.
-# No variables needed — S3 bucket and DynamoDB lock table names are fixed.
+variable "github_org" {
+  description = "GitHub organization or username for OIDC trust policy"
+  type        = string
+}
+
+variable "github_repo" {
+  description = "GitHub repository name for OIDC trust policy"
+  type        = string
+}

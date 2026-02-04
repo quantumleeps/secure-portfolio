@@ -14,6 +14,10 @@ iac/modules/lambda/.zip_cache/
 # Scripts
 scripts/node_modules/
 scripts/seed-data.json
+scripts/.env
 
 # Temporary images
 .images
+
+# Mac related
+.DS_Store
