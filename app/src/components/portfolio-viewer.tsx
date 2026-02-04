@@ -19,7 +19,7 @@ export function PortfolioViewer({ data }: PortfolioViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useHeartbeat(slug, visit_id);
-  usePrefetchImages(slides);
+  usePrefetchImages(slides, intro.avatar ? [intro.avatar] : undefined);
 
   const goTo = useCallback(
     (index: number) => {

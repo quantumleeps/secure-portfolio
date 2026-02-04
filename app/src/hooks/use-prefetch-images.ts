@@ -12,11 +12,17 @@ function loadImage(src: string): Promise<void> {
   });
 }
 
-export function usePrefetchImages(slides: Slide[]) {
+export function usePrefetchImages(slides: Slide[], extraUrls?: string[]) {
   useEffect(() => {
     let cancelled = false;
 
     async function prefetch() {
+      if (extraUrls) {
+        for (const url of extraUrls) {
+          if (cancelled) return;
+          await loadImage(url);
+        }
+      }
       for (const slide of slides) {
         for (const img of slide.images) {
           if (cancelled) return;
@@ -29,5 +35,5 @@ export function usePrefetchImages(slides: Slide[]) {
     return () => {
       cancelled = true;
     };
-  }, [slides]);
+  }, [slides, extraUrls]);
 }

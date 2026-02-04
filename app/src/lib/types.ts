@@ -32,6 +32,7 @@ export interface PortfolioNote {
 export interface Intro {
   name: string;
   tagline: string;
+  avatar?: string;
   contact: ContactInfo;
   headline_stats: string[];
   positioning: string;

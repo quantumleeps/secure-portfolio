@@ -57,6 +57,7 @@
         "section": "INTRODUCTION",
         "name": "Your Name",
         "tagline": "Your Role — A Short Positioning Statement",
+        "avatar": "avatar.jpeg",
         "contact": {
           "email": "you@example.com",
           "phone": "555-555-5555",

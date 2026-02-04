@@ -107,10 +107,19 @@ export async function handler(
     })
   );
 
+  const intro = { ...role.intro };
+  if (intro.avatar) {
+    intro.avatar = await getSignedUrl(
+      s3,
+      new GetObjectCommand({ Bucket: IMAGES_BUCKET, Key: intro.avatar }),
+      { expiresIn: SIGNED_URL_EXPIRY }
+    );
+  }
+
   return json(200, {
     slug,
     visit_id: visitId,
-    intro: role.intro,
+    intro,
     slides: signedSlides,
   });
 }
