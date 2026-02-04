@@ -5,10 +5,14 @@ on:
     branches: [main]
     paths:
       - "iac/environments/prod/**"
+      - "iac/lambdas/**"
+      - "iac/modules/**"
   push:
     branches: [main]
     paths:
       - "iac/environments/prod/**"
+      - "iac/lambdas/**"
+      - "iac/modules/**"
   workflow_dispatch:
 
 permissions:
@@ -27,6 +31,14 @@ jobs:
         with:
           role-to-assume: ${{ vars.AWS_DEPLOYER_ROLE_ARN }}
           aws-region: us-east-1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Lambdas
+        working-directory: iac/lambdas
+        run: npm ci && npm run build
 
       - uses: hashicorp/setup-terraform@v3
 
@@ -70,6 +82,14 @@ jobs:
         with:
           role-to-assume: ${{ vars.AWS_DEPLOYER_ROLE_ARN }}
           aws-region: us-east-1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Lambdas
+        working-directory: iac/lambdas
+        run: npm ci && npm run build
 
       - uses: hashicorp/setup-terraform@v3
 
