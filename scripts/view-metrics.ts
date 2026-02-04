@@ -5,9 +5,18 @@ import {
   ScanCommand,
   type ScanCommandInput,
 } from "@aws-sdk/lib-dynamodb";
+import "./load-env.js";
 
+const envIndex = process.argv.indexOf("--env");
+const env = envIndex !== -1 ? process.argv[envIndex + 1] : "dev";
+if (env !== "dev" && env !== "prod") {
+  console.error('Invalid --env value. Use "dev" or "prod".');
+  process.exit(1);
+}
+
+const prefix = `secure-portfolio-${env}`;
 const TRACKING_TABLE =
-  process.env.TRACKING_TABLE || "secure-portfolio-dev-tracking-links";
+  process.env.TRACKING_TABLE || `${prefix}-tracking-links`;
 
 const client = DynamoDBDocumentClient.from(
   new DynamoDBClient({ region: process.env.AWS_REGION || "us-east-1" })
@@ -182,14 +191,17 @@ function formatDetail(link: LinkSummary): void {
 
 // --- Main ---
 
-const USAGE = `Usage: npx tsx view-metrics.ts [--slug <slug>] [--company <name>]
+const USAGE = `Usage: npx tsx view-metrics.ts [--env dev|prod] [--slug <slug>] [--company <name>]
 
 Modes:
   --slug <slug>       Detailed metrics for a single link
   --company <name>    Summary table filtered by company
   (no flags)          Summary table for all links
 
-Requires AWS credentials. Set AWS_PROFILE=secure-portfolio if needed.`;
+Options:
+  --env dev|prod  Target environment (default: dev)
+
+Requires AWS credentials. Uses secure-portfolio-dev-operator profile for dev.`;
 
 async function main(): Promise<void> {
   const flags = parseArgs(process.argv);

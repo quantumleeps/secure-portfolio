@@ -7,15 +7,22 @@ import {
   PutCommand,
   BatchWriteCommand,
 } from "@aws-sdk/lib-dynamodb";
+import "./load-env.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const SLIDES_TABLE =
-  process.env.SLIDES_TABLE || "secure-portfolio-dev-portfolio-slides";
-const ROLES_TABLE =
-  process.env.ROLES_TABLE || "secure-portfolio-dev-role-versions";
+const envIndex = process.argv.indexOf("--env");
+const env = envIndex !== -1 ? process.argv[envIndex + 1] : "dev";
+if (env !== "dev" && env !== "prod") {
+  console.error('Invalid --env value. Use "dev" or "prod".');
+  process.exit(1);
+}
+
+const prefix = `secure-portfolio-${env}`;
+const SLIDES_TABLE = process.env.SLIDES_TABLE || `${prefix}-portfolio-slides`;
+const ROLES_TABLE = process.env.ROLES_TABLE || `${prefix}-role-versions`;
 const TRACKING_TABLE =
-  process.env.TRACKING_TABLE || "secure-portfolio-dev-tracking-links";
+  process.env.TRACKING_TABLE || `${prefix}-tracking-links`;
 
 const dataPath = resolve(__dirname, "seed-data.json");
 

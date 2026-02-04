@@ -21,9 +21,11 @@ The system has two runtime flows, both routed through the same API Gateway.
 
 **Data layer** — Three DynamoDB tables store all application state: `portfolio-slides` holds slide content (title, narrative sections, tech tags, image keys), `role-versions` maps each role type to an ordered list of slide IDs, and `tracking-links` stores slugs with their visit history and engagement data. Portfolio images are stored in a private S3 bucket with all public access blocked — they are never directly accessible and can only be viewed through pre-signed URLs generated during a valid tracking link visit.
 
-**Hosting** — AWS Amplify manages the CloudFront distribution, Lambda@Edge for SSR, and S3 for static assets. The Amplify app is connected to GitHub and builds are triggered on push to `main` or manually via the operator CLI.
+**Hosting** — AWS Amplify manages the CloudFront distribution, Lambda@Edge for SSR, and S3 for static assets. Two environments: **dev** (`development` branch, `*.amplifyapp.com`) and **prod** (`main` branch, custom domain via Route 53). A CloudFront WAF with rate limiting and AWS managed rule groups protects the prod frontend.
 
-**IAM** — Two scoped IAM users separate infrastructure from operations. The `deployer` user runs Terraform and manages AWS resources. The `operator` user has DynamoDB data-plane access for CLI scripts, S3 upload access for portfolio images, and can trigger Amplify builds.
+**IAM** — Prod deployments use GitHub Actions OIDC — no static credentials. Two OIDC roles: `github-deployer` (Terraform for prod) and `prod-github-operator` (data operations). Dev uses scoped local IAM users (`dev-deployer`, `dev-operator`) with access keys stored in SSM Parameter Store.
+
+**Security hardening** — S3 versioning with noncurrent version lifecycle (30d to IA, 90d expire) and TLS-only bucket policy. DynamoDB point-in-time recovery on all tables. API Gateway native throttling (burst/rate limits). WAF rate limiting + AWS managed rule groups on CloudFront.
 
 ## Tech Stack
 
@@ -31,18 +33,31 @@ The system has two runtime flows, both routed through the same API Gateway.
 - **Hosting**: AWS Amplify (CloudFront, Lambda@Edge, S3 — managed)
 - **Backend**: AWS Lambda, API Gateway, DynamoDB, S3
 - **IaC**: Terraform
-- **CLI Tools**: Bash / Node scripts
+- **DNS**: Route 53
+- **Security**: WAF v2 (CloudFront), OIDC (GitHub Actions)
+- **CI/CD**: GitHub Actions (OIDC for prod, manual for dev)
+- **CLI Tools**: Node scripts
 
 ## Project Structure
 
 ```
 secure-portfolio/
-├── app/              # Next.js portfolio application
-├── iac/              # Terraform infrastructure-as-code
-│   ├── bootstrap/    # One-time setup (S3 state bucket, DynamoDB lock table)
-│   ├── environments/ # Per-environment configs (dev, prod)
-│   └── modules/      # Reusable Terraform modules (DynamoDB, Lambda, API GW, S3)
-├── scripts/          # CLI tools for link management and metrics
+├── app/                    # Next.js portfolio application
+├── iac/                    # Terraform infrastructure-as-code
+│   ├── bootstrap/          # IAM, OIDC provider, state backend, SSM keys
+│   ├── environments/
+│   │   ├── dev/            # Dev environment (development branch)
+│   │   └── prod/           # Prod environment (main branch, custom domain)
+│   └── modules/
+│       ├── amplify/        # Amplify app + optional domain association
+│       ├── api-gateway/    # HTTP API v2 with throttling
+│       ├── dns/            # Route 53 hosted zone
+│       ├── dynamodb/       # DynamoDB table with PITR
+│       ├── lambda/         # Lambda function
+│       ├── s3-private/     # S3 bucket with versioning, lifecycle, TLS-only
+│       └── waf/            # CloudFront WAF with rate limiting
+├── scripts/                # CLI tools for link management and metrics
+├── .github/workflows/      # CI/CD (deploy-infra, deploy-frontend, operate)
 ├── .gitignore
 └── README.md
 ```

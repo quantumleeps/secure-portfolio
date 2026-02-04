@@ -31,6 +31,8 @@ API_ENDPOINT=https://<api-gateway-id>.execute-api.us-east-1.amazonaws.com/dev
 NEXT_PUBLIC_API_ENDPOINT=https://<api-gateway-id>.execute-api.us-east-1.amazonaws.com/dev
 ```
 
+In production, these are set automatically by Terraform via Amplify environment variables.
+
 ## Project Structure
 
 ```
@@ -46,6 +48,7 @@ src/
 │   ├── slide-nav.tsx         # Top nav bar: dropdown, arrows, position indicator
 │   ├── intro-slide.tsx       # Intro: headline stats, positioning, portfolio note
 │   ├── project-slide.tsx     # Project slide layout
+│   ├── image-gallery.tsx     # Image carousel with click-to-enlarge lightbox
 │   └── welcome-toast.tsx     # Welcome toast with confidentiality notice
 ├── hooks/
 │   ├── use-heartbeat.ts      # Background heartbeat hook

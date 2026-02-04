@@ -35,6 +35,18 @@ variable "routes" {
   }))
 }
 
+variable "throttling_burst_limit" {
+  description = "Maximum concurrent requests for all routes"
+  type        = number
+  default     = 50
+}
+
+variable "throttling_rate_limit" {
+  description = "Maximum requests per second for all routes"
+  type        = number
+  default     = 100
+}
+
 variable "tags" {
   description = "Resource tags"
   type        = map(string)

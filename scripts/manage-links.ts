@@ -8,13 +8,22 @@ import {
   UpdateCommand,
   type ScanCommandInput,
 } from "@aws-sdk/lib-dynamodb";
+import "./load-env.js";
 
+const envIndex = process.argv.indexOf("--env");
+const env = envIndex !== -1 ? process.argv[envIndex + 1] : "dev";
+if (env !== "dev" && env !== "prod") {
+  console.error('Invalid --env value. Use "dev" or "prod".');
+  process.exit(1);
+}
+
+const tablePrefix = `secure-portfolio-${env}`;
 const TRACKING_TABLE =
-  process.env.TRACKING_TABLE || "secure-portfolio-dev-tracking-links";
+  process.env.TRACKING_TABLE || `${tablePrefix}-tracking-links`;
 const ROLES_TABLE =
-  process.env.ROLES_TABLE || "secure-portfolio-dev-role-versions";
+  process.env.ROLES_TABLE || `${tablePrefix}-role-versions`;
 const BASE_URL =
-  process.env.BASE_URL || "https://main.dkf5fstrk9fic.amplifyapp.com";
+  process.env.BASE_URL || (env === "prod" ? "https://danleeper.com" : "");
 
 const client = DynamoDBDocumentClient.from(
   new DynamoDBClient({ region: process.env.AWS_REGION || "us-east-1" })
@@ -119,7 +128,8 @@ async function create(flags: Record<string, string>): Promise<void> {
   console.log(`  Slug:    ${slug}`);
   console.log(`  Company: ${flags.company}`);
   console.log(`  Role:    ${flags.role}`);
-  console.log(`  URL:     ${BASE_URL}/portfolio?r=${slug}`);
+  console.log(`  Path:    /portfolio?r=${slug}`);
+  if (BASE_URL) console.log(`  URL:     ${BASE_URL}/portfolio?r=${slug}`);
 }
 
 async function list(flags: Record<string, string>): Promise<void> {
@@ -240,14 +250,17 @@ async function revoke(flags: Record<string, string>): Promise<void> {
 
 // --- Main ---
 
-const USAGE = `Usage: npx tsx manage-links.ts <create|list|revoke> [flags]
+const USAGE = `Usage: npx tsx manage-links.ts <create|list|revoke> [--env dev|prod] [flags]
 
 Commands:
   create  --company <name> --role <role_version> [--slug <custom>]
   list    [--status active|revoked] [--company <name>]
   revoke  --slug <slug>
 
-Requires AWS credentials. Set AWS_PROFILE=secure-portfolio if needed.`;
+Options:
+  --env dev|prod  Target environment (default: dev)
+
+Requires AWS credentials. Uses secure-portfolio-dev-operator profile for dev.`;
 
 const commands: Record<
   string,

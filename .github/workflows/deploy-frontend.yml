@@ -2,6 +2,18 @@ name: Deploy Frontend
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy"
+        required: true
+        type: choice
+        options:
+          - prod
+          - dev
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   deploy:
@@ -9,13 +21,19 @@ jobs:
     steps:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ vars.AWS_OPERATOR_ROLE_ARN }}
           aws-region: us-east-1
 
       - name: Trigger Amplify build
         run: |
+          if [ "${{ inputs.environment }}" = "prod" ]; then
+            APP_ID="${{ vars.AMPLIFY_PROD_APP_ID }}"
+            BRANCH="main"
+          else
+            APP_ID="${{ vars.AMPLIFY_DEV_APP_ID }}"
+            BRANCH="development"
+          fi
           aws amplify start-job \
-            --app-id "${{ secrets.AMPLIFY_APP_ID }}" \
-            --branch-name main \
+            --app-id "$APP_ID" \
+            --branch-name "$BRANCH" \
             --job-type RELEASE

@@ -10,8 +10,8 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.aws_region
-  profile = "secure-portfolio-dev-deployer"
+  region = var.aws_region
+  # No profile — credentials provided by OIDC in CI/CD or AWS_PROFILE env var locally
 }
 
 locals {
@@ -21,6 +21,22 @@ locals {
     Environment = var.environment
   }
   lambda_src_base = "${path.module}/../../lambdas/dist"
+}
+
+# --- DNS ---
+
+module "dns" {
+  source      = "../../modules/dns"
+  domain_name = var.domain_name
+  tags        = local.common_tags
+}
+
+# --- WAF ---
+
+module "waf" {
+  source = "../../modules/waf"
+  name   = "${local.prefix}-waf"
+  tags   = local.common_tags
 }
 
 # --- DynamoDB Tables ---
@@ -138,7 +154,7 @@ module "api_gateway" {
   stage_name = var.environment
   tags       = local.common_tags
 
-  cors_allow_origins = ["*"]
+  cors_allow_origins = ["https://${var.domain_name}", "https://www.${var.domain_name}"]
   cors_allow_methods = ["GET", "POST", "OPTIONS"]
   cors_allow_headers = ["content-type"]
 
@@ -170,8 +186,10 @@ module "amplify" {
   app_name            = "${local.prefix}-frontend"
   repository          = "https://github.com/quantumleeps/secure-portfolio"
   github_access_token = data.aws_ssm_parameter.github_token.value
-  branch_name         = "development"
-  stage               = "DEVELOPMENT"
+  branch_name         = "main"
+  stage               = "PRODUCTION"
+  domain_name         = var.domain_name
+  route53_zone_id     = module.dns.zone_id
   tags                = local.common_tags
 
   environment_variables = {
