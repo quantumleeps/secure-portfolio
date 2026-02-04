@@ -112,6 +112,5 @@ export async function handler(
     visit_id: visitId,
     intro: role.intro,
     slides: signedSlides,
-    closing: role.closing,
   });
 }

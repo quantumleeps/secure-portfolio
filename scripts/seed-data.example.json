@@ -53,41 +53,34 @@
     {
       "role_version": "software_engineer",
       "intro": {
+        "slide_id": "intro",
+        "section": "INTRODUCTION",
         "name": "Your Name",
-        "tagline": "Software Engineer | Your Specialization",
+        "tagline": "Your Role — A Short Positioning Statement",
         "contact": {
           "email": "you@example.com",
           "phone": "555-555-5555",
           "location": "City, State"
         },
-        "summary": "A brief summary of your career path and what drives you.",
-        "bio": "A longer bio paragraph describing your background and expertise.",
-        "path": [
-          { "year": "2015", "event": "CS degree, University" },
-          { "year": "2015-2020", "event": "Software engineering roles" },
-          { "year": "2020", "event": "Built first major platform" },
-          { "year": "2023", "event": "Promoted to senior engineer" }
-        ]
+        "headline_stats": [
+          "A punchy one-liner about your track record",
+          "A punchy one-liner about your technical depth",
+          "A punchy one-liner about business impact",
+          "A punchy one-liner about your growth trajectory"
+        ],
+        "positioning": "A paragraph that explains what makes you different. What kind of problems do you solve? How do you work? What do you bring that others don't?",
+        "portfolio_note": {
+          "text": "A sentence about this portfolio app itself — what it demonstrates about your skills.",
+          "repo": "github.com/your-username/your-repo",
+          "note": "A short note about the repo (e.g., 'My only public repo. All other work is proprietary.')"
+        },
+        "confidentiality": "Optional. A notice about proprietary content, shown in the welcome toast."
       },
       "slide_order": [
         "example-project-1",
         "example-project-2",
         "example-project-3"
-      ],
-      "closing": {
-        "headline": "Your key strengths in a single line",
-        "bullets": [
-          "**Builder**: Description of what you've built",
-          "**Full-stack**: Your core technologies",
-          "**Leader**: Your leadership qualities"
-        ],
-        "contact": {
-          "name": "Your Name",
-          "email": "you@example.com",
-          "phone": "555-555-5555",
-          "location": "City, State"
-        }
-      }
+      ]
     }
   ],
   "trackingLinks": [

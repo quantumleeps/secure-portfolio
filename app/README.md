@@ -14,7 +14,7 @@ Next.js app that renders a role-specific, slide-based portfolio from the backend
 1. Visitor hits `/portfolio?r=<slug>`
 2. Server component calls `GET /api/portfolio?r=<slug>` to validate the link and fetch role-specific content
 3. Invalid or missing slug → 404
-4. Valid slug → renders intro, project slides, and closing — tailored to the role version associated with that link
+4. Valid slug → renders intro and project slides, tailored to the role version associated with that link
 5. Client-side heartbeat pings `POST /api/heartbeat` every 30 seconds for engagement tracking
 
 ## Development
@@ -44,12 +44,12 @@ src/
 │   ├── ui/                   # shadcn primitives
 │   ├── portfolio-viewer.tsx  # Client wrapper: slide state, navigation, keyboard
 │   ├── slide-nav.tsx         # Top nav bar: dropdown, arrows, position indicator
-│   ├── intro-slide.tsx       # Intro/bio layout
+│   ├── intro-slide.tsx       # Intro: headline stats, positioning, portfolio note
 │   ├── project-slide.tsx     # Project slide layout
-│   ├── closing-slide.tsx     # Closing/contact layout
-│   └── welcome-toast.tsx     # Welcome toast on page load
+│   └── welcome-toast.tsx     # Welcome toast with confidentiality notice
 ├── hooks/
-│   └── use-heartbeat.ts     # Background heartbeat hook
+│   ├── use-heartbeat.ts      # Background heartbeat hook
+│   └── use-prefetch-images.ts # Prefetch slide images on mount
 └── lib/
     ├── types.ts              # Portfolio API response types
     └── utils.ts              # shadcn utility

@@ -23,31 +23,20 @@ export interface ContactInfo {
   location: string;
 }
 
-export interface PathEvent {
-  year: string;
-  event: string;
+export interface PortfolioNote {
+  text: string;
+  repo: string;
+  note: string;
 }
 
 export interface Intro {
   name: string;
   tagline: string;
   contact: ContactInfo;
-  summary: string;
-  bio: string;
-  path: PathEvent[];
-}
-
-export interface ClosingContact {
-  name: string;
-  email: string;
-  phone: string;
-  location: string;
-}
-
-export interface Closing {
-  headline: string;
-  bullets: string[];
-  contact: ClosingContact;
+  headline_stats: string[];
+  positioning: string;
+  portfolio_note: PortfolioNote;
+  confidentiality: string;
 }
 
 export interface PortfolioData {
@@ -55,5 +44,4 @@ export interface PortfolioData {
   visit_id: string;
   intro: Intro;
   slides: Slide[];
-  closing: Closing;
 }

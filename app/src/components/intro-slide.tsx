@@ -1,5 +1,5 @@
 import type { Intro } from "@/lib/types";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, GithubIcon } from "lucide-react";
 
 interface IntroSlideProps {
   intro: Intro;
@@ -12,16 +12,22 @@ export function IntroSlide({ intro }: IntroSlideProps) {
         <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
           {intro.name}
         </h1>
-        <p className="text-lg text-muted-foreground">{intro.tagline}</p>
+        <p className="text-xl text-muted-foreground">{intro.tagline}</p>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1.5">
+          <a
+            href={`mailto:${intro.contact.email}`}
+            className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+          >
             <Mail className="h-3.5 w-3.5" />
             {intro.contact.email}
-          </span>
-          <span className="flex items-center gap-1.5">
+          </a>
+          <a
+            href={`tel:${intro.contact.phone}`}
+            className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+          >
             <Phone className="h-3.5 w-3.5" />
             {intro.contact.phone}
-          </span>
+          </a>
           <span className="flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5" />
             {intro.contact.location}
@@ -29,32 +35,40 @@ export function IntroSlide({ intro }: IntroSlideProps) {
         </div>
       </header>
 
-      <blockquote className="border-l-2 border-primary/50 pl-4 text-lg italic text-muted-foreground">
-        {intro.summary}
+      <section className="grid gap-3 sm:grid-cols-2">
+        {intro.headline_stats.map((stat, i) => (
+          <div
+            key={i}
+            className="rounded-lg border border-border/40 bg-card/50 p-4"
+          >
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {stat}
+            </p>
+          </div>
+        ))}
+      </section>
+
+      <blockquote className="border-l-2 border-primary/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        {intro.positioning}
       </blockquote>
 
-      <section className="space-y-6">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
-          My Path
-        </h2>
-        <div className="relative ml-4 border-l border-border/60 pl-6">
-          {intro.path.map((p, i) => (
-            <div key={i} className="relative mb-6 last:mb-0">
-              <div className="absolute -left-[1.6rem] top-1 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background" />
-              <span className="text-sm font-mono font-medium text-primary">
-                {p.year}
-              </span>
-              <p className="mt-0.5 text-sm text-muted-foreground">{p.event}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <p className="text-base leading-relaxed text-muted-foreground">
-          {intro.bio}
+      <div className="animate-shimmer-border rounded-lg border bg-card/50 p-5 space-y-3">
+        <p className="text-sm text-muted-foreground">
+          {intro.portfolio_note.text}
         </p>
-      </section>
+        <a
+          href={`https://${intro.portfolio_note.repo}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 font-mono text-sm text-primary transition-colors hover:text-primary/80"
+        >
+          <GithubIcon className="h-4 w-4" />
+          {intro.portfolio_note.repo}
+        </a>
+        <p className="text-xs text-muted-foreground/60">
+          {intro.portfolio_note.note}
+        </p>
+      </div>
     </div>
   );
 }

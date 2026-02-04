@@ -115,6 +115,15 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+@keyframes shimmer-border {
+  0%, 100% { border-color: var(--border); }
+  50% { border-color: var(--primary); }
+}
+
+.animate-shimmer-border {
+  animation: shimmer-border 3s ease-in-out infinite;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

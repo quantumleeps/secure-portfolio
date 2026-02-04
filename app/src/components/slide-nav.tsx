@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -36,8 +37,11 @@ export function SlideNav({
     <nav className="fixed top-0 left-0 right-0 z-50 flex h-14 select-none items-center justify-between gap-2 border-b border-border/40 bg-background/80 px-3 backdrop-blur-md md:px-4">
       <button
         onClick={() => onSelect(0)}
-        className="hidden shrink-0 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground md:block"
+        className="hidden shrink-0 items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground md:flex"
       >
+        <Badge variant="outline" className="text-[10px] uppercase tracking-widest text-muted-foreground">
+          Engineered by
+        </Badge>
         {items[0]?.label}
       </button>
 
