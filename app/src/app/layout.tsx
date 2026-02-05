@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     template: "%s | Dan Leeper",
   },
   description: "Personal Webpage for Dan Leeper",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1a1e" },
+  ],
 };
 
 const COLOR_THEME_SCRIPT = `(function(){try{var k="color-theme",p=["zinc","blue","green","violet"],t=localStorage.getItem(k);if(!t||p.indexOf(t)===-1&&["rose"].indexOf(t)===-1){t=p[Math.floor(Math.random()*p.length)];localStorage.setItem(k,t)}if(t&&t!=="zinc")document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`;
