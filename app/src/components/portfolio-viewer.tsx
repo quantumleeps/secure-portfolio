@@ -1,24 +1,33 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import type { PortfolioData } from "@/lib/types";
+import type { PortfolioData, Intro, Slide } from "@/lib/types";
 import { SlideNav } from "./slide-nav";
 import { IntroSlide } from "./intro-slide";
 import { ProjectSlide } from "./project-slide";
 import { WelcomeToast } from "./welcome-toast";
 import { useHeartbeat } from "@/hooks/use-heartbeat";
 import { usePrefetchImages } from "@/hooks/use-prefetch-images";
+import { useRefreshUrls } from "@/hooks/use-refresh-urls";
 
 interface PortfolioViewerProps {
   data: PortfolioData;
 }
 
 export function PortfolioViewer({ data }: PortfolioViewerProps) {
-  const { intro, slides, slug, visit_id } = data;
+  const { slug, visit_id } = data;
+  const [intro, setIntro] = useState(data.intro);
+  const [slides, setSlides] = useState(data.slides);
   const totalSlides = slides.length + 1; // intro + projects
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const handleRefresh = useCallback((newIntro: Intro, newSlides: Slide[]) => {
+    setIntro(newIntro);
+    setSlides(newSlides);
+  }, []);
+
   useHeartbeat(slug, visit_id);
+  const { requestRefresh } = useRefreshUrls(slug, visit_id, handleRefresh);
   usePrefetchImages(slides, intro.avatar ? [intro.avatar] : undefined);
 
   const goTo = useCallback(
@@ -61,9 +70,9 @@ export function PortfolioViewer({ data }: PortfolioViewerProps) {
       />
       <main className="pt-16">
         <div className="mx-auto max-w-4xl xl:max-w-7xl px-6 py-12">
-          {currentIndex === 0 && <IntroSlide intro={intro} />}
+          {currentIndex === 0 && <IntroSlide intro={intro} onImageError={requestRefresh} />}
           {currentIndex > 0 && (
-            <ProjectSlide slide={slides[currentIndex - 1]} />
+            <ProjectSlide slide={slides[currentIndex - 1]} onImageError={requestRefresh} />
           )}
         </div>
       </main>

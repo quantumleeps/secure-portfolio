@@ -27,9 +27,33 @@ const json = (statusCode: number, body: unknown): APIGatewayProxyResultV2 => ({
 export async function handler(
   event: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyResultV2> {
-  const slug = event.queryStringParameters?.r;
-  if (!slug) return json(404, { error: "Missing slug parameter" });
+  const body = event.body ? JSON.parse(event.body) : {};
+  const { slug, visit_id } = body;
 
+  if (!slug || !visit_id) {
+    return json(400, { error: "slug and visit_id are required" });
+  }
+
+  // Validate that the visit exists (without creating a new one)
+  try {
+    await client.send(
+      new UpdateCommand({
+        TableName: TRACKING_TABLE,
+        Key: { slug },
+        UpdateExpression: "SET visits.#vid.last_refresh = :ts",
+        ExpressionAttributeNames: { "#vid": visit_id },
+        ExpressionAttributeValues: { ":ts": new Date().toISOString() },
+        ConditionExpression: "attribute_exists(visits.#vid)",
+      })
+    );
+  } catch (err: unknown) {
+    if ((err as { name: string }).name === "ConditionalCheckFailedException") {
+      return json(404, { error: "Visit not found" });
+    }
+    throw err;
+  }
+
+  // Fetch link to get role_version
   const linkResult = await client.send(
     new GetCommand({ TableName: TRACKING_TABLE, Key: { slug } })
   );
@@ -38,6 +62,7 @@ export async function handler(
     return json(404, { error: "Invalid or inactive link" });
   }
 
+  // Fetch role and slides (same logic as validate-link)
   const roleResult = await client.send(
     new GetCommand({
       TableName: ROLES_TABLE,
@@ -67,25 +92,7 @@ export async function handler(
   );
   const slides = slideOrder.map((id) => slideMap.get(id)).filter(Boolean);
 
-  const visitId = crypto.randomUUID();
-  await client.send(
-    new UpdateCommand({
-      TableName: TRACKING_TABLE,
-      Key: { slug },
-      UpdateExpression: "SET visits.#vid = :visit",
-      ExpressionAttributeNames: { "#vid": visitId },
-      ExpressionAttributeValues: {
-        ":visit": {
-          visited_at: new Date().toISOString(),
-          user_agent: event.requestContext?.http?.userAgent ?? "",
-          referrer: event.headers?.referer ?? "",
-          ip: event.requestContext?.http?.sourceIp ?? "",
-          heartbeats: 0,
-        },
-      },
-    })
-  );
-
+  // Re-sign all image URLs
   const signedSlides = await Promise.all(
     slides.map(async (slide) => {
       if (!slide) return slide;
@@ -116,10 +123,5 @@ export async function handler(
     );
   }
 
-  return json(200, {
-    slug,
-    visit_id: visitId,
-    intro,
-    slides: signedSlides,
-  });
+  return json(200, { intro, slides: signedSlides });
 }

@@ -5,6 +5,7 @@ import { Calendar } from "lucide-react";
 
 interface ProjectSlideProps {
   slide: Slide;
+  onImageError?: () => void;
 }
 
 function renderMarkdownBold(text: string) {
@@ -20,7 +21,7 @@ function renderMarkdownBold(text: string) {
   );
 }
 
-export function ProjectSlide({ slide }: ProjectSlideProps) {
+export function ProjectSlide({ slide, onImageError }: ProjectSlideProps) {
   return (
     <div className="space-y-10">
       <header className="space-y-3 xl:max-w-4xl">
@@ -62,7 +63,7 @@ export function ProjectSlide({ slide }: ProjectSlideProps) {
           )}
 
           {slide.images.length > 0 && (
-            <ImageGallery images={slide.images} slideId={slide.slide_id} />
+            <ImageGallery images={slide.images} slideId={slide.slide_id} onImageError={onImageError} />
           )}
 
           {(slide.built || (slide.built_items && slide.built_items.length > 0)) && (
