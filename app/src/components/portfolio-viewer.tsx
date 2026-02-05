@@ -7,7 +7,7 @@ import { IntroSlide } from "./intro-slide";
 import { ProjectSlide } from "./project-slide";
 import { WelcomeToast } from "./welcome-toast";
 import { useHeartbeat } from "@/hooks/use-heartbeat";
-import { usePrefetchImages } from "@/hooks/use-prefetch-images";
+import { useNeighborPrefetch } from "@/hooks/use-prefetch-images";
 import { useRefreshUrls } from "@/hooks/use-refresh-urls";
 
 interface PortfolioViewerProps {
@@ -28,7 +28,7 @@ export function PortfolioViewer({ data }: PortfolioViewerProps) {
 
   useHeartbeat(slug, visit_id);
   const { requestRefresh } = useRefreshUrls(slug, visit_id, handleRefresh);
-  usePrefetchImages(slides, intro.avatar ? [intro.avatar] : undefined);
+  useNeighborPrefetch(currentIndex, slides, intro);
 
   const goTo = useCallback(
     (index: number) => {

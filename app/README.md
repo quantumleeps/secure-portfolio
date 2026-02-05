@@ -52,7 +52,8 @@ src/
 │   └── welcome-toast.tsx     # Welcome toast with confidentiality notice
 ├── hooks/
 │   ├── use-heartbeat.ts      # Background heartbeat hook
-│   └── use-prefetch-images.ts # Prefetch slide images on mount
+│   ├── use-prefetch-images.ts # Neighbor-based slide image prefetching
+│   └── use-refresh-urls.ts   # Re-sign expired S3 image URLs on error
 └── lib/
     ├── types.ts              # Portfolio API response types
     └── utils.ts              # shadcn utility
