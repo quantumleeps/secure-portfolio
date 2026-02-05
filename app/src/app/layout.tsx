@@ -15,8 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dan Leeper — Portfolio",
-  description: "Full-Stack Software Engineer | Cloud & DevOps",
+  title: {
+    default: "Dan Leeper",
+    template: "%s | Dan Leeper",
+  },
+  description: "Personal Webpage for Dan Leeper",
 };
 
 export default function RootLayout({
