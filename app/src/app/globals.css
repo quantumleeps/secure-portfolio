@@ -124,6 +124,54 @@
   animation: shimmer-border 3s ease-in-out infinite;
 }
 
+@keyframes shimmer-sweep {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.contact-glow {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.contact-glow:hover,
+.contact-group:has(.contact-nudge:hover) .contact-glow-email {
+  border-color: oklch(0.75 0.08 250);
+  color: oklch(0.95 0.02 250);
+  background: linear-gradient(
+    120deg,
+    transparent 25%,
+    oklch(0.7 0.08 250 / 0.1) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 1.5s ease-in-out infinite;
+  box-shadow:
+    0 0 15px oklch(0.7 0.1 250 / 0.35),
+    0 0 30px oklch(0.7 0.1 250 / 0.15),
+    0 0 60px oklch(0.7 0.1 250 / 0.08);
+}
+
+@keyframes terminal-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor {
+  animation: terminal-blink 1s step-end infinite;
+}
+
+@keyframes copy-rise {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+.animate-copy-rise {
+  animation: copy-rise 1.5s ease-out forwards;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
