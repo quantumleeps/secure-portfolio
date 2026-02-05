@@ -17,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ImageGalleryProps {
   images: SlideImage[];
@@ -26,9 +27,11 @@ interface ImageGalleryProps {
 
 function ImageLightbox({ image, onImageError }: { image: SlideImage; onImageError?: () => void }) {
   const [imgFailed, setImgFailed] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   useEffect(() => {
     setImgFailed(false);
+    setImgLoaded(false);
   }, [image.src]);
 
   return (
@@ -40,14 +43,23 @@ function ImageLightbox({ image, onImageError }: { image: SlideImage; onImageErro
             className="w-full cursor-zoom-in overflow-hidden rounded-lg bg-muted/30"
           >
             {image.src && !imgFailed ? (
-              <img
-                src={image.src}
-                alt={image.title}
-                className="aspect-video w-full select-none object-cover"
-                draggable={false}
-                onContextMenu={(e) => e.preventDefault()}
-                onError={() => { setImgFailed(true); onImageError?.(); }}
-              />
+              <div className="relative aspect-video w-full">
+                {!imgLoaded && (
+                  <Skeleton className="absolute inset-0 rounded-lg" />
+                )}
+                <img
+                  src={image.src}
+                  alt={image.title}
+                  className={cn(
+                    "aspect-video w-full select-none object-cover transition-opacity duration-500",
+                    imgLoaded ? "opacity-100" : "opacity-0"
+                  )}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                  onLoad={() => setImgLoaded(true)}
+                  onError={() => { setImgFailed(true); onImageError?.(); }}
+                />
+              </div>
             ) : (
               <div className="flex aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
                 {image.title}
