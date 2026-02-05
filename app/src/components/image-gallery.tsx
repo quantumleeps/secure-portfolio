@@ -21,9 +21,10 @@ import {
 interface ImageGalleryProps {
   images: SlideImage[];
   slideId: string;
+  onImageError?: () => void;
 }
 
-function ImageLightbox({ image }: { image: SlideImage }) {
+function ImageLightbox({ image, onImageError }: { image: SlideImage; onImageError?: () => void }) {
   const [imgFailed, setImgFailed] = useState(false);
 
   useEffect(() => {
@@ -45,7 +46,7 @@ function ImageLightbox({ image }: { image: SlideImage }) {
                 className="aspect-video w-full select-none object-cover"
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
-                onError={() => setImgFailed(true)}
+                onError={() => { setImgFailed(true); onImageError?.(); }}
               />
             ) : (
               <div className="flex aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
@@ -75,7 +76,7 @@ function ImageLightbox({ image }: { image: SlideImage }) {
   );
 }
 
-function ImageCarousel({ images, slideId }: ImageGalleryProps) {
+function ImageCarousel({ images, slideId, onImageError }: ImageGalleryProps) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const count = images.length;
@@ -94,7 +95,7 @@ function ImageCarousel({ images, slideId }: ImageGalleryProps) {
         <CarouselContent>
           {images.map((img, i) => (
             <CarouselItem key={`${slideId}-${i}`}>
-              <ImageLightbox image={img} />
+              <ImageLightbox image={img} onImageError={onImageError} />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -132,12 +133,12 @@ function ImageCarousel({ images, slideId }: ImageGalleryProps) {
   );
 }
 
-export function ImageGallery({ images, slideId }: ImageGalleryProps) {
+export function ImageGallery({ images, slideId, onImageError }: ImageGalleryProps) {
   if (images.length === 0) return null;
 
   if (images.length === 1) {
-    return <ImageLightbox image={images[0]} />;
+    return <ImageLightbox image={images[0]} onImageError={onImageError} />;
   }
 
-  return <ImageCarousel images={images} slideId={slideId} />;
+  return <ImageCarousel images={images} slideId={slideId} onImageError={onImageError} />;
 }

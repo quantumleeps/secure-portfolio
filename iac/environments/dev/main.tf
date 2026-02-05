@@ -103,6 +103,39 @@ data "aws_iam_policy_document" "record_heartbeat_policy" {
   }
 }
 
+data "aws_iam_policy_document" "refresh_urls_policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:GetItem",
+      "dynamodb:BatchGetItem",
+    ]
+    resources = [
+      module.dynamodb_portfolio_slides.table_arn,
+      module.dynamodb_role_versions.table_arn,
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:GetItem",
+      "dynamodb:UpdateItem",
+    ]
+    resources = [
+      module.dynamodb_tracking_links.table_arn,
+    ]
+  }
+
+  statement {
+    effect  = "Allow"
+    actions = ["s3:GetObject"]
+    resources = [
+      "${module.s3_portfolio_images.bucket_arn}/*",
+    ]
+  }
+}
+
 # --- Lambda Functions ---
 
 module "lambda_validate_link" {
@@ -130,6 +163,20 @@ module "lambda_record_heartbeat" {
   tags = local.common_tags
 }
 
+module "lambda_refresh_urls" {
+  source          = "../../modules/lambda"
+  function_name   = "${local.prefix}-refresh-urls"
+  source_dir      = "${local.lambda_src_base}/refresh-urls"
+  iam_policy_json = data.aws_iam_policy_document.refresh_urls_policy.json
+  environment_vars = {
+    SLIDES_TABLE   = module.dynamodb_portfolio_slides.table_name
+    ROLES_TABLE    = module.dynamodb_role_versions.table_name
+    TRACKING_TABLE = module.dynamodb_tracking_links.table_name
+    IMAGES_BUCKET  = module.s3_portfolio_images.bucket_name
+  }
+  tags = local.common_tags
+}
+
 # --- API Gateway ---
 
 module "api_gateway" {
@@ -152,6 +199,11 @@ module "api_gateway" {
       route_key    = "POST /api/heartbeat"
       function_arn = module.lambda_record_heartbeat.function_arn
       invoke_arn   = module.lambda_record_heartbeat.invoke_arn
+    },
+    {
+      route_key    = "POST /api/refresh-urls"
+      function_arn = module.lambda_refresh_urls.function_arn
+      invoke_arn   = module.lambda_refresh_urls.invoke_arn
     },
   ]
 }

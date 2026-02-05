@@ -4,9 +4,10 @@ import { Mail, Phone, MapPin, GithubIcon } from "lucide-react";
 
 interface IntroSlideProps {
   intro: Intro;
+  onImageError?: () => void;
 }
 
-export function IntroSlide({ intro }: IntroSlideProps) {
+export function IntroSlide({ intro, onImageError }: IntroSlideProps) {
   const initials = intro.name
     .split(" ")
     .map((n) => n[0])
@@ -19,7 +20,13 @@ export function IntroSlide({ intro }: IntroSlideProps) {
       <header className="flex flex-row items-start gap-5">
         {intro.avatar && (
           <Avatar className="size-20 shrink-0 ring-2 ring-border shadow-[0_0_15px_rgba(255,255,255,0.25)] sm:size-28">
-            <AvatarImage src={intro.avatar} alt={intro.name} />
+            <AvatarImage
+              src={intro.avatar}
+              alt={intro.name}
+              onLoadingStatusChange={(status) => {
+                if (status === "error") onImageError?.();
+              }}
+            />
             <AvatarFallback className="text-2xl">{initials}</AvatarFallback>
           </Avatar>
         )}
