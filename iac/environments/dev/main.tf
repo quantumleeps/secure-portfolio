@@ -229,5 +229,7 @@ module "amplify" {
   environment_variables = {
     AMPLIFY_MONOREPO_APP_ROOT = "app"
     NEXT_PUBLIC_API_ENDPOINT  = module.api_gateway.invoke_url
+    CONTACT_EMAIL             = var.contact_email
+    CONTACT_PHONE             = var.contact_phone
   }
 }

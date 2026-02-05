@@ -1,6 +1,11 @@
-import { notFound } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
+import type { Metadata } from "next";
 import type { PortfolioData } from "@/lib/types";
 import { PortfolioViewer } from "@/components/portfolio-viewer";
+
+export const metadata: Metadata = {
+  title: "Portfolio",
+};
 
 interface PageProps {
   searchParams: Promise<{ r?: string }>;
@@ -30,7 +35,7 @@ export default async function PortfolioPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const slug = params.r;
 
-  if (!slug) notFound();
+  if (!slug) redirect("/");
 
   const data = await fetchPortfolio(slug);
   if (!data) notFound();

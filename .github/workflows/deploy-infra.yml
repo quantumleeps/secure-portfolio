@@ -24,6 +24,9 @@ jobs:
   plan:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_contact_email: ${{ secrets.CONTACT_EMAIL }}
+      TF_VAR_contact_phone: ${{ secrets.CONTACT_PHONE }}
     steps:
       - uses: actions/checkout@v4
 
@@ -75,6 +78,9 @@ jobs:
   apply:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_contact_email: ${{ secrets.CONTACT_EMAIL }}
+      TF_VAR_contact_phone: ${{ secrets.CONTACT_PHONE }}
     steps:
       - uses: actions/checkout@v4
 

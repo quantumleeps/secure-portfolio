@@ -17,3 +17,15 @@ variable "domain_name" {
   description = "Custom domain name for the production site"
   type        = string
 }
+
+variable "contact_email" {
+  description = "Contact email displayed on the landing page"
+  type        = string
+  sensitive   = true
+}
+
+variable "contact_phone" {
+  description = "Contact phone displayed on the landing page"
+  type        = string
+  sensitive   = true
+}
