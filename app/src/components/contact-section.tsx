@@ -21,7 +21,7 @@ export function ContactSection({ email, phone }: ContactSectionProps) {
   return (
     <div className="contact-group space-y-3">
       {(email || phone) && (
-        <div className="flex flex-wrap items-center gap-4 text-sm text-white/70">
+        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           {email && (
             <div className="relative">
               <button
@@ -33,7 +33,7 @@ export function ContactSection({ email, phone }: ContactSectionProps) {
               </button>
               {showCopied && (
                 <div className="absolute -top-1 left-1/2 -translate-x-1/2 pointer-events-none">
-                  <span className="animate-copy-rise flex items-center gap-1 text-xs text-white whitespace-nowrap">
+                  <span className="animate-copy-rise flex items-center gap-1 text-xs text-foreground whitespace-nowrap">
                     <ClipboardCheck className="h-3 w-3" />
                     copied
                   </span>
@@ -53,7 +53,7 @@ export function ContactSection({ email, phone }: ContactSectionProps) {
         </div>
       )}
 
-      <p className="text-sm text-white/40 pl-4">
+      <p className="text-sm text-muted-foreground/60 pl-4">
         Looking for something
         specific? Feel free to{" "}
         {email ? (
@@ -64,12 +64,12 @@ export function ContactSection({ email, phone }: ContactSectionProps) {
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") handleReachOutClick();
             }}
-            className="contact-nudge text-white/60"
+            className="contact-nudge text-muted-foreground"
           >
             reach out
           </span>
         ) : (
-          <span className="contact-nudge text-white/60">
+          <span className="contact-nudge text-muted-foreground">
             reach out
           </span>
         )}

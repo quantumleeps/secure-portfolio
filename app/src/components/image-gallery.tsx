@@ -40,7 +40,7 @@ function ImageLightbox({ image, onImageError }: { image: SlideImage; onImageErro
         <DialogTrigger asChild>
           <button
             type="button"
-            className="w-full cursor-zoom-in overflow-hidden rounded-lg bg-muted/30"
+            className="w-full cursor-zoom-in overflow-hidden rounded-lg bg-muted/60 dark:bg-muted/40"
           >
             {image.src && !imgFailed ? (
               <div className="relative aspect-video w-full">
@@ -74,7 +74,7 @@ function ImageLightbox({ image, onImageError }: { image: SlideImage; onImageErro
         )}
       </figure>
 
-      <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-[calc(100%-4rem)] border border-white/10 bg-black p-2 md:p-4 [&>button]:text-white">
+      <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-[calc(100%-4rem)] border border-border bg-background p-2 md:p-4 [&>button]:text-foreground">
         <DialogTitle className="sr-only">{image.title}</DialogTitle>
         <img
           src={image.src}
