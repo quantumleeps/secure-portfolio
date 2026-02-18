@@ -70,7 +70,7 @@ export function PortfolioViewer({ data }: PortfolioViewerProps) {
       />
       <main className="pt-16">
         <div className="mx-auto max-w-4xl xl:max-w-7xl px-6 py-12 pb-20">
-          {currentIndex === 0 && <IntroSlide intro={intro} onImageError={requestRefresh} />}
+          {currentIndex === 0 && <IntroSlide intro={intro} slides={slides} onImageError={requestRefresh} />}
           {currentIndex > 0 && (
             <ProjectSlide slide={slides[currentIndex - 1]} onImageError={requestRefresh} />
           )}
