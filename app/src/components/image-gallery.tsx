@@ -25,9 +25,12 @@ interface ImageGalleryProps {
   onImageError?: () => void;
 }
 
+const isVideo = (src: string) => /\.mp4(\?|$)/i.test(src);
+
 function ImageLightbox({ image, onImageError }: { image: SlideImage; onImageError?: () => void }) {
   const [imgFailed, setImgFailed] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const video = isVideo(image.src);
 
   useEffect(() => {
     setImgFailed(false);
@@ -47,18 +50,34 @@ function ImageLightbox({ image, onImageError }: { image: SlideImage; onImageErro
                 {!imgLoaded && (
                   <Skeleton className="absolute inset-0 rounded-lg" />
                 )}
-                <img
-                  src={image.src}
-                  alt={image.title}
-                  className={cn(
-                    "aspect-video w-full select-none object-cover transition-opacity duration-500",
-                    imgLoaded ? "opacity-100" : "opacity-0"
-                  )}
-                  draggable={false}
-                  onContextMenu={(e) => e.preventDefault()}
-                  onLoad={() => setImgLoaded(true)}
-                  onError={() => { setImgFailed(true); onImageError?.(); }}
-                />
+                {video ? (
+                  <video
+                    src={image.src}
+                    className={cn(
+                      "h-full w-full select-none object-contain p-[2.5%] drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] transition-opacity duration-500",
+                      imgLoaded ? "opacity-100" : "opacity-0"
+                    )}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    onLoadedData={() => setImgLoaded(true)}
+                    onError={() => { setImgFailed(true); onImageError?.(); }}
+                  />
+                ) : (
+                  <img
+                    src={image.src}
+                    alt={image.title}
+                    className={cn(
+                      "aspect-video w-full select-none object-cover transition-opacity duration-500",
+                      imgLoaded ? "opacity-100" : "opacity-0"
+                    )}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onLoad={() => setImgLoaded(true)}
+                    onError={() => { setImgFailed(true); onImageError?.(); }}
+                  />
+                )}
               </div>
             ) : (
               <div className="flex aspect-video items-center justify-center p-8 text-sm text-muted-foreground">
@@ -76,13 +95,22 @@ function ImageLightbox({ image, onImageError }: { image: SlideImage; onImageErro
 
       <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-[calc(100%-4rem)] border border-border bg-background p-2 md:p-4 [&>button]:text-foreground">
         <DialogTitle className="sr-only">{image.title}</DialogTitle>
-        <img
-          src={image.src}
-          alt={image.title}
-          className="max-h-[calc(100vh-10rem)] w-full select-none rounded-md object-contain"
-          draggable={false}
-          onContextMenu={(e) => e.preventDefault()}
-        />
+        {video ? (
+          <video
+            src={image.src}
+            className="max-h-[calc(100vh-10rem)] w-full rounded-md object-contain"
+            controls
+            autoPlay
+          />
+        ) : (
+          <img
+            src={image.src}
+            alt={image.title}
+            className="max-h-[calc(100vh-10rem)] w-full select-none rounded-md object-contain"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
