@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: Promise<{ r?: string }>;
+  searchParams: Promise<{ r?: string; preview?: string }>;
 }
 
 async function fetchPortfolio(slug: string): Promise<PortfolioData | null> {
@@ -33,8 +33,15 @@ async function fetchPortfolio(slug: string): Promise<PortfolioData | null> {
 
 export default async function PortfolioPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const slug = params.r;
 
+  if (process.env.NODE_ENV === "development" && params.preview) {
+    const { loadPreviewData } = await import("@/lib/preview");
+    const data = loadPreviewData(params.preview);
+    if (!data) notFound();
+    return <PortfolioViewer data={data} />;
+  }
+
+  const slug = params.r;
   if (!slug) redirect("/");
 
   const data = await fetchPortfolio(slug);

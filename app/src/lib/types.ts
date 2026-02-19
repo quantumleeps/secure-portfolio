@@ -16,6 +16,7 @@ export interface Slide {
   impact: string[];
   tech_stack: string[];
   images: SlideImage[];
+  repo?: string;
 }
 
 export interface ContactInfo {

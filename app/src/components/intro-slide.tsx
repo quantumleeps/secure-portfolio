@@ -1,13 +1,56 @@
-import type { Intro } from "@/lib/types";
+import type { Intro, Slide } from "@/lib/types";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Mail, Phone, MapPin, GithubIcon } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { GitHubIcon } from "@/components/ui/github-icon";
 
 interface IntroSlideProps {
   intro: Intro;
+  slides?: Slide[];
   onImageError?: () => void;
 }
 
-export function IntroSlide({ intro, onImageError }: IntroSlideProps) {
+function buildRepoMap(slides: Slide[]): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const slide of slides) {
+    if (slide.repo) {
+      const name = slide.repo.split("/").pop();
+      if (name) map.set(name, slide.repo);
+    }
+  }
+  return map;
+}
+
+function renderNoteWithLinks(
+  text: string,
+  repoMap: Map<string, string>
+): React.ReactNode[] {
+  if (repoMap.size === 0) return [text];
+  const pattern = new RegExp(
+    `(${[...repoMap.keys()].join("|")})`,
+    "g"
+  );
+  const parts = text.split(pattern);
+  return parts.map((part, i) => {
+    const repo = repoMap.get(part);
+    if (repo) {
+      return (
+        <a
+          key={i}
+          href={`https://${repo}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
+        >
+          {part}
+        </a>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
+export function IntroSlide({ intro, slides, onImageError }: IntroSlideProps) {
+  const repoMap = slides ? buildRepoMap(slides) : new Map<string, string>();
   const initials = intro.name
     .split(" ")
     .map((n) => n[0])
@@ -54,6 +97,15 @@ export function IntroSlide({ intro, onImageError }: IntroSlideProps) {
               <MapPin className="h-3.5 w-3.5" />
               {intro.contact.location}
             </span>
+            <a
+              href={`https://${intro.portfolio_note.repo}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+            >
+              <GitHubIcon className="h-3.5 w-3.5" />
+              quantumleeps
+            </a>
           </div>
         </div>
       </header>
@@ -80,16 +132,16 @@ export function IntroSlide({ intro, onImageError }: IntroSlideProps) {
           {intro.portfolio_note.text}
         </p>
         <a
-          href={`https://${intro.portfolio_note.repo}`}
+          href={`https://${intro.portfolio_note.repo}/secure-portfolio`}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 font-mono text-sm text-primary transition-colors hover:text-primary/80"
         >
-          <GithubIcon className="h-4 w-4" />
-          {intro.portfolio_note.repo}
+          <GitHubIcon className="h-4 w-4" />
+          {intro.portfolio_note.repo}/secure-portfolio
         </a>
         <p className="text-xs text-muted-foreground/60">
-          {intro.portfolio_note.note}
+          {renderNoteWithLinks(intro.portfolio_note.note, repoMap)}
         </p>
       </div>
     </div>
