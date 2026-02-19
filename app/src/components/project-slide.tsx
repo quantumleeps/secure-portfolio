@@ -2,6 +2,7 @@ import type { Slide } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { ImageGallery } from "@/components/image-gallery";
 import { Calendar } from "lucide-react";
+import { GitHubIcon } from "@/components/ui/github-icon";
 
 interface ProjectSlideProps {
   slide: Slide;
@@ -45,6 +46,17 @@ export function ProjectSlide({ slide, onImageError }: ProjectSlideProps) {
         )}
         <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           {slide.title}
+          {slide.repo && (
+            <a
+              href={`https://${slide.repo}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="github-icon-shimmer ml-2 inline-block translate-y-[0.05em] align-middle"
+              aria-label="View on GitHub"
+            >
+              <GitHubIcon className="h-5 w-5" />
+            </a>
+          )}
         </h1>
         <p className="text-lg text-muted-foreground">{slide.subtitle}</p>
       </header>
