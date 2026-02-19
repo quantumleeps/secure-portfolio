@@ -44,7 +44,9 @@ export function useNeighborPrefetch(
       }
     }
 
-    const newUrls = urls.filter((u) => !prefetchedUrls.current.has(u));
+    const newUrls = urls.filter(
+      (u) => !prefetchedUrls.current.has(u) && !/\.mp4(\?|$)/i.test(u)
+    );
     for (const url of newUrls) {
       prefetchedUrls.current.add(url);
     }

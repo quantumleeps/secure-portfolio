@@ -13,6 +13,11 @@ interface SeedData {
   roleVersions: SeedRoleVersion[];
 }
 
+function toPreviewUrl(src: string): string {
+  if (!src || src.startsWith("http") || src.startsWith("/")) return src;
+  return `/api/preview-images/${src}`;
+}
+
 export function loadPreviewData(roleVersion: string): PortfolioData | null {
   try {
     const seedPath = join(process.cwd(), "..", "scripts", "seed-data.json");
@@ -43,10 +48,22 @@ export function loadPreviewData(roleVersion: string): PortfolioData | null {
       }
     }
 
+    const previewIntro = {
+      ...(intro as Intro),
+      avatar: intro.avatar ? toPreviewUrl(intro.avatar) : undefined,
+    } as Intro;
+
+    for (const slide of slides) {
+      slide.images = slide.images.map((img) => ({
+        ...img,
+        src: toPreviewUrl(img.src),
+      }));
+    }
+
     return {
       slug: "preview",
       visit_id: "preview-local",
-      intro: intro as Intro,
+      intro: previewIntro,
       slides,
     };
   } catch (err) {
